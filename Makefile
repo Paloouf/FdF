@@ -6,33 +6,29 @@
 #    By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/16 14:22:58 by ltressen          #+#    #+#              #
-#    Updated: 2023/03/31 11:59:09 by ltressen         ###   ########.fr        #
+#    Updated: 2023/04/27 15:23:26 by ltressen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 FLAGS = -Wall -Werror -Wextra
 
-NAME = push_swap.a
+LIBS = -lX11 -lXext -lm
+INCLUDE = minilibx-linux/libmlx.a
+NAME = fdf.a
 
-EXEC= push_swap
-SRC = push.c \
-	swap.c \
-	main.c \
-	memory.c \
-	rotate.c \
-	r_rotate.c \
-	algo.c
+EXEC= fdf
+SRC = main.c
 	
 OBJ = ${SRC:.c=.o} 
 	
-all: $(NAME)  clean
+all: $(NAME)
 
-$(NAME):
+$(NAME): ${OBJ}
 	make -C libft/
 	mv libft/libft.a ${NAME}
-	gcc -c ${FLAGS} ${SRC}
+	gcc -c ${FLAGS} ${SRC} ${LIBS}
 	ar rc ${NAME} ${OBJ}
-	gcc ${FLAGS} -g ${SRC} ${NAME} -o ${EXEC}
+	gcc ${FLAGS} -g ${SRC} ${NAME} ${INCLUDE} ${LIBS} -o ${EXEC}
 	
 clean:
 	make clean -C libft/
