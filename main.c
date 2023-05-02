@@ -6,13 +6,13 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 09:19:20 by ltressen          #+#    #+#             */
-/*   Updated: 2023/04/27 15:28:54 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/02 15:25:21 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-int	deal_key(int key, void *param)
+/*int	deal_key(int key, void *param)
 {
 	(void)key;
 	(void)param;
@@ -28,9 +28,33 @@ int	deal_key(int key, void *param)
 		x++;
 	//mlx_pixel_put(mlx_ptr, win_ptr, x, y, 0xFFFFFF);
 	return (0);
-}
+}*/
 
-int	main(void)
+int	main(int argc, char **argv)
+{
+	t_pbl	*map;
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	map = malloc(sizeof(t_pbl));
+	if (argc == 2)
+	{
+		read_file(map, argv[1]);
+		while (i < 9)
+		{	
+			j = 0;
+			while (j < 11)
+				printf("%d ", map->tab[i][j++]);
+			printf("\n");
+			i++;
+		}
+	}
+	return (0);
+
+}
+/*int	main(void)
 {
 	void *mlx_ptr;
 	void *win_ptr;
@@ -51,7 +75,7 @@ int	main(void)
 }
 
 
-/*
+
 void	events(keyevent)
 {
 	if (keyevent == XK_Escape)

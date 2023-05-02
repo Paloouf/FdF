@@ -6,7 +6,7 @@
 #    By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/16 14:22:58 by ltressen          #+#    #+#              #
-#    Updated: 2023/04/27 15:23:26 by ltressen         ###   ########.fr        #
+#    Updated: 2023/05/02 14:50:51 by ltressen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,8 @@ INCLUDE = minilibx-linux/libmlx.a
 NAME = fdf.a
 
 EXEC= fdf
-SRC = main.c
+SRC = main.c \
+	parsing.c
 	
 OBJ = ${SRC:.c=.o} 
 	
