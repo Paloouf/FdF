@@ -6,32 +6,32 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 13:41:14 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/02 15:20:47 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/03 14:31:32 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-int	*ft_intsplit(char *line)
+void	ft_intsplit(t_pbl *map, char *line)
 {
-	int	*result;
+	static int x = 0;
 	char	**tmp;
-	int	i;
+	int	y;
 
-	i = 0;
+	y = 0;
 	tmp = ft_split(line, ' ');
-	while(tmp[i])
-		i++;
-	result = (int *)malloc(sizeof(int) * (i + 1));
-	result[i] = '\0';
-	i = 0;
-	while (tmp[i])
+	while(tmp[y])
+		y++;
+	map->wth = y;
+	map->pix[x] = ft_calloc(y + 1, sizeof(t_point));
+	y = 0;
+	while (tmp[y])
 	{
-		result[i] = ft_atoi(tmp[i]);
-		i++;
+		map->pix[x][y].alt = ft_atoi(tmp[y]);
+		y++;
 	}
 	free(tmp);
-	return (result);
+	x++;
 }
 
 void	read_file(t_pbl *map, char *name)
@@ -50,16 +50,15 @@ void	read_file(t_pbl *map, char *name)
 		i++;
 	}
 	close(file);
-	map->tab = (int **)malloc(sizeof(int *) * (i + 1));
-	map->tab[i] = '\0';
+	map->hgt = i - 1;
+	map->pix = malloc(sizeof(t_point *) * i + 1);
 	file = open(name, O_RDONLY);
 	line = get_next_line(file);
-	i = 0;
 	while (line)
 	{
-		map->tab[i] = ft_intsplit(line);
+		ft_intsplit(map, line);
 		line = get_next_line(file);
-		i++;
  	}
 	return ;
 }
+
