@@ -6,7 +6,7 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 12:00:59 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/03 15:16:38 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/04 15:23:00 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "libft/libft.h"
 # include "minilibx-linux/mlx.h"
 # include <math.h>
+# include <X11/keysym.h>
 
 typedef struct s_point
 {
@@ -50,5 +51,9 @@ void	ft_intsplit(t_pbl *map, char *line);
 void	read_file(t_pbl *map, char *name);
 void	print_map(t_pbl *map);
 void	init_all(t_pbl *map);
+void	draw_map(t_pbl *map);
+void    draw(t_pbl *map, t_point one, t_point two);
+int	key_events(t_pbl *map, int key);
+int	no_event(void *data);
 
 #endif

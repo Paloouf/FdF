@@ -6,7 +6,7 @@
 #    By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/16 14:22:58 by ltressen          #+#    #+#              #
-#    Updated: 2023/05/02 14:50:51 by ltressen         ###   ########.fr        #
+#    Updated: 2023/05/04 15:22:02 by ltressen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,9 @@ NAME = fdf.a
 
 EXEC= fdf
 SRC = main.c \
-	parsing.c
+	parsing.c \
+	draw.c \
+	events.c
 	
 OBJ = ${SRC:.c=.o} 
 	
