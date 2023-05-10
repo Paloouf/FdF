@@ -6,7 +6,7 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 13:41:14 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/03 14:31:32 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/10 13:50:54 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	ft_intsplit(t_pbl *map, char *line)
 	y = 0;
 	while (tmp[y])
 	{
-		map->pix[x][y].alt = ft_atoi(tmp[y]);
+		map->pix[x][y].z = ft_atoi(tmp[y]);
 		y++;
 	}
 	free(tmp);

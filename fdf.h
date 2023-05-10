@@ -6,7 +6,7 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 12:00:59 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/04 15:23:00 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/10 17:28:32 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,30 @@
 # include "libft/libft.h"
 # include "minilibx-linux/mlx.h"
 # include <math.h>
+# include <X11/X.h>
 # include <X11/keysym.h>
 
 typedef struct s_point
 {
 	int	xp;
 	int	yp;
-	int	alt;
+	int	zp;
+	int	z;
 	int	color;
 } t_point;
 
+typedef struct s_matrix
+{
+	double *x;
+	double *y;
+	double *z;
+} t_matrix;
+
 typedef struct s_cam
 {
-	int	angle_x;
-	int	angle_y;
+	double	angle_x;
+	double	angle_y;
+	double	angle_z;
 	void	*mlx_ptr;
 	void	*win_ptr;
 } t_cam;
@@ -42,6 +52,8 @@ typedef struct s_pbl
 	int	hgt;
 	t_point	**pix;
 	t_cam	cam;
+	t_matrix rotate;
+	t_matrix angle;
 } t_pbl;
 
 
@@ -53,7 +65,10 @@ void	print_map(t_pbl *map);
 void	init_all(t_pbl *map);
 void	draw_map(t_pbl *map);
 void    draw(t_pbl *map, t_point one, t_point two);
-int	key_events(t_pbl *map, int key);
+int	key_events(int key, t_pbl *map);
 int	no_event(void *data);
+t_point	projection(t_pbl *map, int x, int y);
+t_point	projection_rotate(t_pbl *map, t_point pix);
+t_point	projection_angle(t_pbl *map, t_point pix);
 
 #endif

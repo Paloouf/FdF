@@ -6,7 +6,7 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 15:11:01 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/04 15:23:34 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/09 14:05:20 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	no_event(void *data)
 	return (0);
 }
 
-int	key_events(t_pbl *map, int key)
+int	key_events(int key, t_pbl *map)
 {	
 	if (key == XK_Escape)
 		mlx_destroy_window(map->cam.mlx_ptr, map->cam.win_ptr);
