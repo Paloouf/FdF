@@ -6,7 +6,7 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 12:00:59 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/10 17:28:32 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/11 09:59:54 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ typedef struct s_pbl
 {
 	int	wth;
 	int	hgt;
+	int	zmax;
+	int	zmin;
 	t_point	**pix;
 	t_cam	cam;
 	t_matrix rotate;
