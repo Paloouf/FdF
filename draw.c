@@ -6,7 +6,7 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 08:56:56 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/10 18:24:13 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/11 09:12:07 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,9 @@ t_point	projection(t_pbl *map, int x, int y)
 {
 	t_point pt;
 
-	pt.xp = (map->pix[y][x].xp - WIDTH/2) * cos(map->cam.angle_x) + map->pix[y][x].yp * (-sin(map->cam.angle_x)) + map->pix[y][x].zp * 0;//resultat de matrice de proj iso; 
-	pt.yp = (map->pix[y][x].xp - WIDTH/2)* (sin(map->cam.angle_x)*cos(map->cam.angle_z)) + map->pix[y][x].yp * (cos(map->cam.angle_x) * cos(map->cam.angle_z)) + map->pix[y][x].zp * (-sin(map->cam.angle_z));//resultat de matrice de proj iso;
-	pt.zp = (map->pix[y][x].xp - WIDTH/2)* (sin(map->cam.angle_x) * sin(map->cam.angle_z)) + map->pix[y][x].yp * (cos(map->cam.angle_x) * sin(map->cam.angle_z)) + map->pix[y][x].zp * cos(map->cam.angle_z);
+	pt.xp = (map->pix[y][x].xp) * cos(map->cam.angle_x) + map->pix[y][x].yp * (-sin(map->cam.angle_x)) + map->pix[y][x].zp * 0;//resultat de matrice de proj iso; 
+	pt.yp = (map->pix[y][x].xp)* (sin(map->cam.angle_x)*cos(map->cam.angle_z)) + map->pix[y][x].yp * (cos(map->cam.angle_x) * cos(map->cam.angle_z)) + map->pix[y][x].zp * (-sin(map->cam.angle_z));//resultat de matrice de proj iso;
+	pt.zp = (map->pix[y][x].xp)* (sin(map->cam.angle_x) * sin(map->cam.angle_z)) + map->pix[y][x].yp * (cos(map->cam.angle_x) * sin(map->cam.angle_z)) + map->pix[y][x].zp * cos(map->cam.angle_z);
 	//pt.color = get_color(pt.zp);
 	return(pt);
 }
@@ -64,16 +64,12 @@ void    draw(t_pbl *map, t_point one, t_point two)
 {
         int     dx;
         int     dy;
-       // double  x;
-      //  double  y;
         int     i;
         double  a;
 
         i = 0;
         dx = one.xp - two.xp;
         dy = one.yp - two.yp;
-	//x = one.xp * cos(map->cam.angle_x) + one.yp * cos(map->cam.angle_x + 2.0944) + one.zp * cos(map->cam.angle_x - 2.0944);
-       // y = one.xp * sin(map->cam.angle_x) + one.yp * sin(map->cam.angle_x + 2.0944) + one.zp * sin(map->cam.angle_x - 2.0944);
 	if (abs(dx) >= abs(dy))
                 a = (double) dy / (double) dx;
         else
