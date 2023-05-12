@@ -6,7 +6,7 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 12:00:59 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/11 09:59:54 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/12 20:05:59 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@
 # include <math.h>
 # include <X11/X.h>
 # include <X11/keysym.h>
+
+# define ZOOM_MINUS 65453
+# define ZOOM_UP 65451
 
 typedef struct s_point
 {
@@ -52,6 +55,13 @@ typedef struct s_pbl
 	int	hgt;
 	int	zmax;
 	int	zmin;
+	int	xmin;
+	int	xmax;
+	int	ymin;
+	int	ymax;
+	int	xD;
+	int	yD;
+	int	zoom;
 	t_point	**pix;
 	t_cam	cam;
 	t_matrix rotate;
@@ -63,7 +73,6 @@ typedef struct s_pbl
 int	deal_key(int key, void *param);
 void	ft_intsplit(t_pbl *map, char *line);
 void	read_file(t_pbl *map, char *name);
-void	print_map(t_pbl *map);
 void	init_all(t_pbl *map);
 void	draw_map(t_pbl *map);
 void    draw(t_pbl *map, t_point one, t_point two);
@@ -72,5 +81,7 @@ int	no_event(void *data);
 t_point	projection(t_pbl *map, int x, int y);
 t_point	projection_rotate(t_pbl *map, t_point pix);
 t_point	projection_angle(t_pbl *map, t_point pix);
+void aller_les_bleus(t_pbl *map);
+void	re_init(t_pbl *map);
 
 #endif

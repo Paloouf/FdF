@@ -6,7 +6,7 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 08:56:56 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/11 12:02:35 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/12 19:49:03 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,10 @@ void	draw_map(t_pbl *map)
 	int	x;
 	int	y;
 
+
 	x = 0;
+	ft_printf("xD\n");
+	aller_les_bleus(map);
 	while(x < map->wth - 1)
 	{
 		y = 0;
@@ -28,6 +31,37 @@ void	draw_map(t_pbl *map)
 			y++;		
                 }
 		x++;
+	}
+	ft_printf("WTF\n");
+
+}
+
+void aller_les_bleus(t_pbl *map)
+{
+	t_point one;
+	t_point two;
+	t_point three;
+	t_point zero;
+
+	ft_printf("YOLO\n");
+	one = projection(map, 0, 0);
+	ft_printf("YOLO2\n");
+	two = projection(map, 0, map->hgt - 1);
+	three = projection(map, map->wth - 1, 0);
+	zero = projection(map, map->wth - 1, map->hgt - 1);
+	if (one.xp < two.xp)
+	{
+		map->xmin = one.xp;
+		map->xmax = zero.xp;
+		map->ymin = three.yp;
+		map->ymax = two.yp;
+	}
+	else
+	{
+		map->xmin = two.xp;
+		map->xmax = three.xp;
+		map->ymin = one.yp;
+		map->ymax = zero.yp;
 	}
 }
 /*
@@ -48,15 +82,35 @@ t_point	projection_angle(t_pbl *map, t_point pix)
 	pix.zp= pix.xp * 0 + pix.yp * (sin(map->cam.angle_z)) + pix.zp * (cos(map->cam.angle_z));
 	return(pix);
 }*/
+unsigned int    color(int zone, int ztwo, int i, int total)
+{
+        unsigned int    code;
+        int     dz;
+
+        (void)ztwo;
+        (void)i;
+       // ft_printf("%d\n", total);
+        dz = zone - ztwo;
+        if (zone == ztwo)
+                code = 16777215 - (2500 * zone);
+        else
+        {       
+                if (total != 0)         
+                        code = 16777215 - ((2500 * zone) + ((2500 / total) * (i * (1 - ((dz < 0 ) * 2)))));
+        }
+        return (code);
+}
+
 
 t_point	projection(t_pbl *map, int x, int y)
 {
 	t_point pt;
 
-	pt.xp = (map->pix[y][x].xp) * cos(map->cam.angle_x) + map->pix[y][x].yp * (-sin(map->cam.angle_x)) + map->pix[y][x].zp * 0;//resultat de matrice de proj iso; 
+	//ft_printf("%d\n", map->pix[y][x].z);
+	pt.xp = (map->pix[y][x].xp) * cos(map->cam.angle_x) + map->pix[y][x].yp * (-sin(map->cam.angle_x)) + map->pix[y][x].zp * 0;
 	pt.yp = (map->pix[y][x].xp)* (sin(map->cam.angle_x)*cos(map->cam.angle_z)) + map->pix[y][x].yp * (cos(map->cam.angle_x) * cos(map->cam.angle_z)) + map->pix[y][x].zp * (-sin(map->cam.angle_z));//resultat de matrice de proj iso;
 	pt.zp = (map->pix[y][x].xp)* (sin(map->cam.angle_x) * sin(map->cam.angle_z)) + map->pix[y][x].yp * (cos(map->cam.angle_x) * sin(map->cam.angle_z)) + map->pix[y][x].zp * cos(map->cam.angle_z);
-	//pt.color = get_color(pt.zp);
+	pt.z= map->pix[y][x].z;
 	return(pt);
 }
 
@@ -67,6 +121,8 @@ void    draw(t_pbl *map, t_point one, t_point two)
         int     i;
         double  a;
 
+	map->xD = (map->xmin + (WIDTH - map->xmax));
+	map->yD = (map->ymin + (HEIGHT - map->ymax))/2;
         i = 0;
         dx = one.xp - two.xp;
         dy = one.yp - two.yp;
@@ -74,11 +130,11 @@ void    draw(t_pbl *map, t_point one, t_point two)
                 a = (double) dy / (double) dx;
         else
                 a = (double) dx / (double) dy;
-        if (dy == 0)
+	if (dy == 0)
         {
                 while (one.xp + i != two.xp)
                 {
-                        mlx_pixel_put(map->cam.mlx_ptr, map->cam.win_ptr, one.xp + i, one.yp, 0xFFFFFF);
+                        mlx_pixel_put(map->cam.mlx_ptr, map->cam.win_ptr, (one.xp + i) + map->xD, one.yp + map->yD, color(one.z, two.z, i, one.xp - two.xp));
                         i += 1 - (2 * (dx > 0));
                 }
         }
@@ -86,25 +142,23 @@ void    draw(t_pbl *map, t_point one, t_point two)
         {
                 while (one.yp + i != two.yp)
                 {
-                        mlx_pixel_put(map->cam.mlx_ptr, map->cam.win_ptr, one.xp, one.yp + i, 0xFFFFFF);
+                        mlx_pixel_put(map->cam.mlx_ptr, map->cam.win_ptr, one.xp + map->xD, one.yp + i + map->yD, color(one.z, two.z, i, one.yp - two.yp));
                         i += 1 - (2 * (dy > 0));
                 }
         }
         else if (abs(dy) >= abs(dx))
         {
-//        ft_printf("dy > dx | dx : %d, dy : %d\n,xp 1 = %d, xp 2 = %d, yp 1 = %d, yp 2 = %d \n",dx, dy, one.xp, two.xp, one.yp, two.yp);
                 while (one.yp + i != two.yp)
                 {
-                	mlx_pixel_put(map->cam.mlx_ptr, map->cam.win_ptr, one.xp + ((double) i * a), one.yp + i, 0xFFFFFF);
-                	i += 1 - (2 * (dy > 0));
-                }       
+                        mlx_pixel_put(map->cam.mlx_ptr, map->cam.win_ptr, (one.xp + ((double) i * a)) + map->xD, one.yp + i + map->yD, color(one.z, two.z, i, one.yp - two.yp));
+                        i += 1 - (2 * (dy > 0));
+                }
         }
         else if (abs(dx) > abs(dy))
         {
-//        ft_printf("dx > dy | dx : %d, dy :%d\n xp 1 = %d, xp 2 = %d, yp 1 = %d, yp 2 = %d \n",dx, dy, one.xp, two.xp, one.yp, two.yp);
                 while (one.xp + i != two.xp)
                 {
-                    mlx_pixel_put(map->cam.mlx_ptr, map->cam.win_ptr, one.xp + i, one.yp + ((double) i * a), 0xFFFFFF);
+                    mlx_pixel_put(map->cam.mlx_ptr, map->cam.win_ptr, (one.xp + i) + map->xD, one.yp + ((double) i * a) + map->yD, color(one.z, two.z, i, one.xp - two.yp));
                     i += 1 - (2 * (dx > 0));
                 }
         }
