@@ -6,7 +6,7 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 09:19:20 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/12 20:10:04 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/15 14:53:10 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,14 @@ int	main(int argc, char **argv)
 		mlx_loop(map.cam.mlx_ptr);
 	}
 	return (0);
+}
+
+void	pxl_to_img(t_pbl *map, int x, int y, unsigned int color)
+{
+	char	*pixel;
+
+	pixel = map->img.data_addr + (y * map->img.line_len + x * (map->img.bpp / 8));
+	*(int *)pixel = color;
 }
 
 /*	code pour print le tableau parsed;
@@ -55,6 +63,8 @@ void	init_all(t_pbl *map)
 	map->cam.angle_y = 0;
 	map->cam.angle_z = 35 * (M_PI / 180);
 	map->zoom = 0;
+	map->img.image = mlx_new_image(map->cam.mlx_ptr, WIDTH, HEIGHT);
+	map->img.data_addr = mlx_get_data_addr(map->img.image, &map->img.bpp, &map->img.line_len, &map->img.endian);
 	y = 0;
 	while(y < map->hgt)
 	{
@@ -76,7 +86,6 @@ void	re_init(t_pbl *map)
 	int	y;
 
 	y = 0;
-	ft_printf("PAS MORT\n");
 	if (map->zoom > -900)
 	{
 		while(y < map->hgt)
@@ -91,7 +100,13 @@ void	re_init(t_pbl *map)
 			}
 			y++;
 		}
-		ft_printf("TOUJOURS PAS\n");
+		erase_img(map);
 		draw_map(map);
 	}
+}
+
+void	erase_img(t_pbl *map)
+{
+	map->img.image = mlx_new_image(map->cam.mlx_ptr, WIDTH, HEIGHT);
+	map->img.data_addr = mlx_get_data_addr(map->img.image, &map->img.bpp, &map->img.line_len, &map->img.endian);
 }

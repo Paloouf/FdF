@@ -6,7 +6,7 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 12:00:59 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/12 20:05:59 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/15 14:14:57 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,15 @@ typedef struct s_cam
 	void	*win_ptr;
 } t_cam;
 
+typedef struct s_img
+{
+	void	*image;
+	char	*data_addr;
+	int	bpp;
+	int	line_len;
+	int	endian;
+} t_img;
+
 typedef struct s_pbl
 {
 	int	wth;
@@ -66,6 +75,7 @@ typedef struct s_pbl
 	t_cam	cam;
 	t_matrix rotate;
 	t_matrix angle;
+	t_img	img;
 } t_pbl;
 
 
@@ -83,5 +93,7 @@ t_point	projection_rotate(t_pbl *map, t_point pix);
 t_point	projection_angle(t_pbl *map, t_point pix);
 void aller_les_bleus(t_pbl *map);
 void	re_init(t_pbl *map);
+void	pxl_to_img(t_pbl *map, int x, int y, unsigned int color);
+void	erase_img(t_pbl *map);
 
 #endif
