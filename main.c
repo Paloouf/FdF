@@ -6,7 +6,7 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 09:19:20 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/15 14:53:10 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/15 15:21:03 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,8 @@ void	init_all(t_pbl *map)
 		x = 0;
 		while(x < map->wth)
 		{
-			map->pix[y][x].xp = x * ((1000+map->zoom)/map->wth);//(((WIDTH / map->wth)/2) * x) + ((WIDTH % (map->wth)/2)+ ((WIDTH / map->wth) / 2));
-			map->pix[y][x].yp = y * ((1000+map->zoom)/map->wth);//(((HEIGHT / map->hgt)/2) * y) + ((HEIGHT % (map->hgt)/2) + ((HEIGHT / map->hgt) / 2));
+			map->pix[y][x].xp = x * (1000+map->zoom)/(map->wth);//(((WIDTH / map->wth)/2) * x) + ((WIDTH % (map->wth)/2)+ ((WIDTH / map->wth) / 2));
+			map->pix[y][x].yp = y * (1000+map->zoom)/(map->hgt);//(((HEIGHT / map->hgt)/2) * y) + ((HEIGHT % (map->hgt)/2) + ((HEIGHT / map->hgt) / 2));
 			map->pix[y][x].zp = (map->pix[y][x].z * 50)/(map->zmax - map->zmin);/* + (HEIGHT % (map->hgt)/4);*/
 			x++;
 		}
@@ -93,8 +93,8 @@ void	re_init(t_pbl *map)
 			x = 0;
 			while(x < map->wth)
 			{
-				map->pix[y][x].xp = x * ((1000+map->zoom)/map->wth);//(((WIDTH / map->wth)/2) * x) + ((WIDTH % (map->wth)/2)+ ((WIDTH / map->wth) / 2));
-				map->pix[y][x].yp = y * ((1000+map->zoom)/map->wth);//(((HEIGHT / map->hgt)/2) * y) + ((HEIGHT % (map->hgt)/2) + ((HEIGHT / map->hgt) / 2));
+				map->pix[y][x].xp = x * (1000+map->zoom)/(map->wth);//(((WIDTH / map->wth)/2) * x) + ((WIDTH % (map->wth)/2)+ ((WIDTH / map->wth) / 2));
+				map->pix[y][x].yp = y * (1000+map->zoom)/(map->hgt);//(((HEIGHT / map->hgt)/2) * y) + ((HEIGHT % (map->hgt)/2) + ((HEIGHT / map->hgt) / 2));
 				map->pix[y][x].zp = (map->pix[y][x].z * 50)/(map->zmax - map->zmin);/* + (HEIGHT % (map->hgt)/4);*/
 				x++;
 			}

@@ -6,7 +6,7 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 08:56:56 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/15 14:35:52 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/15 15:34:13 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ void    draw(t_pbl *map, t_point one, t_point two)
         int     i;
         double  a;
 
-	map->xD = (map->xmin + (WIDTH - map->xmax));
+	map->xD = (map->xmin + (WIDTH - map->xmax))/2;
 	map->yD = (map->ymin + (HEIGHT - map->ymax))/2;
         i = 0;
         dx = one.xp - two.xp;
