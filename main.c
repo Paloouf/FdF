@@ -6,7 +6,7 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 09:19:20 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/15 15:21:03 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/16 09:01:26 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	init_all(t_pbl *map)
 	int	x;
 	int	y;
 
+	map->origin = projection(map, WIDTH/2, HEIGHT/2);
 	map->cam.angle_x = 45 *(M_PI / 180);
 	map->cam.angle_y = 0;
 	map->cam.angle_z = 35 * (M_PI / 180);

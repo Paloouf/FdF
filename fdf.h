@@ -6,7 +6,7 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 12:00:59 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/15 14:14:57 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/16 09:01:23 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ typedef struct s_pbl
 	int	yD;
 	int	zoom;
 	t_point	**pix;
+	t_point origin;
 	t_cam	cam;
 	t_matrix rotate;
 	t_matrix angle;
