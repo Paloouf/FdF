@@ -6,24 +6,45 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 15:11:01 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/15 14:53:46 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/17 16:48:22 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-int	no_event(void *data)
+void	free_all(t_pbl *map)
 {
-	(void)data;
-	ft_printf("X");
-	return (0);
+	int y;
+
+	if (map->img.image)
+		mlx_destroy_image(map->cam.mlx_ptr, map->img.image);
+	if (map->pix)
+	{
+		y = 0;
+		while (y < map->hgt)
+		{
+			free(map->pix[y]);
+			y++;
+		}
+		free(map->pix);
+	}
+	if (map->cam.mlx_ptr)
+	{
+		mlx_destroy_window(map->cam.mlx_ptr, map->cam.win_ptr);
+		mlx_destroy_display(map->cam.mlx_ptr);
+		free(map->cam.mlx_ptr);
+	}
+	//free(map);
 }
 
 int	key_events(int key, t_pbl *map)
 {	
 	if (key == XK_Escape)
-		mlx_destroy_window(map->cam.mlx_ptr, map->cam.win_ptr);
-	//ft_printf("%d", key);
+	{
+		//mlx_destroy_window(map->cam.mlx_ptr, map->cam.win_ptr);
+		free_all(map);
+		exit(EXIT_SUCCESS);
+	}
 	if (key == ZOOM_UP)
 	{
 		map->zoom += 100;
@@ -63,5 +84,40 @@ int	key_events(int key, t_pbl *map)
 		map->cam.angle_z += 5 * (M_PI / 180);
 		re_init(map);
 	}
+	if (key == XK_t)
+	{
+		map->alt_z += 10;
+		re_init(map);
+	}
+	if (key == XK_g)
+	{
+		if (map->alt_z > 0)
+		{
+			map->alt_z -= 10;
+			re_init(map);
+		}
+	}
+	if (key == XK_w)
+   	{
+       		map->decv -= 20;
+       		re_init(map);
+   	}
+    	if (key == XK_s)
+    	{
+    	    map->decv += 20;
+    	    re_init(map);
+    	}	
+    	if (key == XK_a)
+   	{
+    		map->dech -= 20;
+        	re_init(map);
+   	}
+    	if (key == XK_d)
+    	{
+        	map->dech += 20;
+        	re_init(map);
+    	}
+	if (key == XK_x)
+		reset(map);
 	return (0);
 }

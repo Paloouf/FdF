@@ -6,7 +6,7 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 08:56:56 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/15 15:34:13 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/17 16:48:18 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ void	draw_map(t_pbl *map)
                 }
 		x++;
 	}
+	draw(map, projection(map, x, y), projection(map, 0, y));
+	draw(map, projection(map, x, y), projection(map, x, 0));
 	mlx_put_image_to_window(map->cam.mlx_ptr, map->cam.win_ptr, map->img.image, 0, 0);
 }
 
@@ -59,38 +61,28 @@ void aller_les_bleus(t_pbl *map)
 		map->ymax = zero.yp;
 	}
 }
-/*
-t_point	projection_rotate(t_pbl *map, t_point pix)
-{
-	//matrice de rotation
-	pix.xp = pix.xp * (cos(map->cam.angle_x)) + pix.yp * (-sin(map->cam.angle_x)) + pix.zp * 0;
-	pix.yp = pix.xp * (sin(map->cam.angle_x)) + pix.yp * (cos(map->cam.angle_x)) + pix.zp * 0;
-	pix.zp = pix.xp * 0 + pix.yp * 0 + pix.zp * 1;
-	return(pix);
-}
 
-t_point	projection_angle(t_pbl *map, t_point pix)
-{
-	//matrice de rotation d'angle
-	pix.xp= pix.xp * 1 + pix.yp * 0 + pix.zp * 0;
-	pix.yp= pix.xp * 0 + pix.yp * (cos(map->cam.angle_z)) + pix.zp * (-sin(map->cam.angle_z));
-	pix.zp= pix.xp * 0 + pix.yp * (sin(map->cam.angle_z)) + pix.zp * (cos(map->cam.angle_z));
-	return(pix);
-}*/
 unsigned int    color(int zone, int ztwo, int i, int total)
 {
-        unsigned int    code;
-        int     dz;
+    unsigned int    code;
+    double    dz;
 
-        dz = zone - ztwo;
-        if (zone == ztwo)
-                code = 16777215 - (2500 * zone);
-        else
-        {       
-                if (total != 0)         
-                        code = 16777215 - ((2500 * zone) + ((2500 / total) * (i * (1 - ((dz < 0 ) * 2)))));
-        }
-        return (code);
+    if (zone > ztwo && ztwo != 0)
+        dz = zone / ztwo;
+    if (ztwo > zone && zone != 0)
+        dz = ztwo / zone;
+    if (zone > ztwo && ztwo == 0)
+        dz = zone * -1;
+    if (zone < ztwo && zone == 0)
+        dz = ztwo;
+    if (zone == ztwo)
+        code = 16777215 - (2500 * zone);
+    else
+    {
+        if (total != 0)
+            code = 16777215 - ((2500 * zone) + (((2500 / abs(total)) * (abs(i) * dz))));
+    }
+    return (code);
 }
 
 
@@ -105,6 +97,7 @@ t_point	projection(t_pbl *map, int x, int y)
 	return(pt);
 }
 
+
 void    draw(t_pbl *map, t_point one, t_point two)
 {
         int     dx;
@@ -112,21 +105,21 @@ void    draw(t_pbl *map, t_point one, t_point two)
         int     i;
         double  a;
 
-	map->xD = (map->xmin + (WIDTH - map->xmax))/2;
-	map->yD = (map->ymin + (HEIGHT - map->ymax))/2;
+   	map->xD = (abs(map->xmin) + abs(WIDTH - map->xmax))/2;
+   	map->yD = (abs(map->ymin) + abs(HEIGHT - map->ymax))/2;
         i = 0;
         dx = one.xp - two.xp;
         dy = one.yp - two.yp;
-	if (abs(dx) >= abs(dy))
+  	 if (abs(dx) >= abs(dy))
                 a = (double) dy / (double) dx;
         else
                 a = (double) dx / (double) dy;
-	if (dy == 0)
+    	if (dy == 0)
         {
                 while (one.xp + i != two.xp)
                 {
-			if (((one.xp + i) + map->xD > 0 && (one.xp + i) + map->xD < WIDTH) && (one.yp + map->yD > 0 && one.yp + map->yD < HEIGHT))
-                        	pxl_to_img(map, (one.xp + i) + map->xD, one.yp + map->yD, color(one.z, two.z, i, one.xp - two.xp));
+            if (((one.xp + i) + map->xD + map->dech > 0 && (one.xp + i) + map->xD + map->dech < WIDTH) && (one.yp + map->yD + map->decv > 0 && one.yp + map->yD + map->decv < HEIGHT))
+                            pxl_to_img(map, (one.xp + i) + map->xD + map->dech, one.yp + map->yD + map->decv , color(one.z, two.z, i, one.xp - two.xp));
                         i += 1 - (2 * (dx > 0));
                 }
         }
@@ -134,8 +127,8 @@ void    draw(t_pbl *map, t_point one, t_point two)
         {
                 while (one.yp + i != two.yp)
                 {
-			if ((one.xp + map->xD > 0 && one.xp + map->xD < WIDTH) && (one.yp + i + map->yD > 0 && one.yp + i + map->yD < HEIGHT))
-                        	pxl_to_img(map, one.xp + map->xD, one.yp + i + map->yD, color(one.z, two.z, i, one.yp - two.yp));
+            if ((one.xp + map->xD + map->dech > 0 && one.xp + map->xD + map->dech < WIDTH) && (one.yp + i + map->decv + map->yD > 0 && one.yp + map->decv + i + map->yD < HEIGHT))
+                            pxl_to_img(map, one.xp + map->xD + map->dech, one.yp + i + map->decv + map->yD, color(one.z, two.z, i, one.yp - two.yp));
                         i += 1 - (2 * (dy > 0));
                 }
         }
@@ -143,8 +136,8 @@ void    draw(t_pbl *map, t_point one, t_point two)
         {
                 while (one.yp + i != two.yp)
                 {
-			if (((one.xp + ((double) i * a)) + map->xD > 0 && (one.xp + ((double) i * a)) + map->xD < WIDTH) && (one.yp + i + map->yD > 0 && one.yp + i + map->yD < HEIGHT))
-                        	pxl_to_img(map, (one.xp + ((double) i * a)) + map->xD, one.yp + i + map->yD, color(one.z, two.z, i, one.yp - two.yp));
+            if (((one.xp + ((double) i * a)) + map->xD + map->dech > 0 && (one.xp + ((double) i * a)) + map->dech + map->xD < WIDTH) && (one.yp + map->decv + i + map->yD > 0 && one.yp + i + map->decv + map->yD < HEIGHT))
+                            pxl_to_img(map, (one.xp + ((double) i * a)) + map->xD + map->dech, one.yp + i + map->decv + map->yD, color(one.z, two.z, i, one.yp - two.yp));
                         i += 1 - (2 * (dy > 0));
                 }
         }
@@ -152,12 +145,12 @@ void    draw(t_pbl *map, t_point one, t_point two)
         {
                 while (one.xp + i != two.xp)
                 {
-			if (((one.xp + i) + map->xD > 0 && (one.xp + i) + map->xD < WIDTH) && (one.yp + ((double) i * a) + map->yD > 0 && one.yp + ((double) i * a) + map->yD < HEIGHT))
-                   		pxl_to_img(map, (one.xp + i) + map->xD, one.yp + ((double) i * a) + map->yD, color(one.z, two.z, i, one.xp - two.xp));
-                    	i += 1 - (2 * (dx > 0));
+            if (((one.xp + i) + map->xD + map->dech > 0 && (one.xp + i) + map->xD + map->dech < WIDTH) && (one.yp + ((double) i * a) + map->decv + map->yD > 0 && one.yp + ((double) i * a) + map->yD + map->decv < HEIGHT))
+                           pxl_to_img(map, (one.xp + i) + map->xD + map->dech, one.yp + ((double) i * a) + map->yD + map->decv , color(one.z, two.z, i, one.xp - two.xp));
+                        i += 1 - (2 * (dx > 0));
                 }
         }
-}                    
+}                   
 
 
 /* SAVED BEFORE PXL TO IMG

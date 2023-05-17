@@ -6,7 +6,7 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 13:41:14 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/11 10:28:27 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/17 14:05:12 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	ft_intsplit(t_pbl *map, char *line)
 			map->zmax = map->pix[x][y].z;
 		if (map->pix[x][y].z < map->zmin)
 			map->zmin = map->pix[x][y].z;
+		free(tmp[y]);
 		y++;
 	}
 	free(tmp);
@@ -51,17 +52,19 @@ void	read_file(t_pbl *map, char *name)
 	line = get_next_line(file);
 	while (line)
 	{
+		free(line);
 		line = get_next_line(file);
 		i++;
 	}
 	close(file);
 	map->hgt = i - 1;
-	map->pix = malloc(sizeof(t_point *) * i + 1);
+	map->pix = malloc(sizeof(t_point *) * i);
 	file = open(name, O_RDONLY);
 	line = get_next_line(file);
 	while (line)
 	{
 		ft_intsplit(map, line);
+		free(line);
 		line = get_next_line(file);
  	}
 	return ;
