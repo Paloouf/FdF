@@ -6,7 +6,7 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 13:41:14 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/19 10:49:08 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/19 15:31:59 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,15 @@ int	get_color(char *color)
 	int	i;
 
 	colors = 0;
-	i = 2;
+	i = 0;
 	while (color[i])
 	{
 		if (color[i] >= '0' && color[i] <= '9')
-			colors += (ft_power(color[i] - 48, i - 1));
+			colors += (color[i] - 48) * (ft_power(16, ft_strlen(color) - i));
 		else if (color[i] >= 'A' && color[i] <= 'F')
-			colors += (ft_power(color[i] - 55, i - 1));
+			colors += (color[i] - 55) * (ft_power(16, ft_strlen(color) - i));
 		else if (color[i] >= 'a' && color[i] <= 'f')
-			color += ft_power(color[i] -  87, i - 1);
+			colors += (color[i] - 87) * (ft_power(16, ft_strlen(color) - i));
 		i++;
 	}
 	return (colors);
@@ -89,19 +89,22 @@ void	ft_intsplit(t_pbl *map, char *line)
 
 	y = 0;
 	tmp = ft_split(line, ' ');
-	while (tmp[y])
+	//ft_printf("%s \n", line);
+	while (tmp[y] && tmp[y][0] != '\n')
 		y++;
 	map->wth = y;
-	map->pix[x] = ft_calloc(y + 1, sizeof(t_point));
+	//ft_printf("%d\n", map->wth);
+	map->pix[x] = ft_calloc(y, sizeof(t_point));
+	//malloc(sizeof(t_point)*y);
 	y = 0;
 	while (tmp[y])
 	{
-		point = ft_split(tmp[y], ','); 
+		point = ft_split(tmp[y], 'x'); 
 		map->pix[x][y].z = ft_atoi(point[0]);
 		if (point[1])
 		{
 			map->pix[x][y].color = get_color(point[1]);
-			ft_printf("%d\n", map->pix[x][y].color);
+			//ft_printf("%d\n", map->pix[x][y].color);
 			map->pix[0][0].colorflag = 1;
 		}
 		else
@@ -111,7 +114,7 @@ void	ft_intsplit(t_pbl *map, char *line)
 		if (map->pix[x][y].z < map->zmin)
 			map->zmin = map->pix[x][y].z;
 		free(tmp[y]);
-		free(point);
+		//free(point);
 		y++;
 	}
 	free(tmp);
@@ -135,14 +138,15 @@ void	read_file(t_pbl *map, char *name)
 	}
 	close(file);
 	map->hgt = i - 1;
-	map->pix = malloc(sizeof(t_point *) * i);
+	map->pix = malloc(sizeof(t_point *) * i - 1);
 	file = open(name, O_RDONLY);
 	line = get_next_line(file);
-	while (line)
+	while (i > 1)
 	{
 		ft_intsplit(map, line);
 		free(line);
 		line = get_next_line(file);
+		i--;
 	}
 	return ;
 }

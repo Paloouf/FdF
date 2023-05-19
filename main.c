@@ -6,7 +6,7 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 09:19:20 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/19 09:50:40 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/19 15:38:09 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 int	main(int argc, char **argv)
 {
 	t_pbl	map;
+	//int x= 0;
+	//int y = 0;
 
 	map.zmax = 0;
 	map.zmin = 0;
@@ -24,6 +26,17 @@ int	main(int argc, char **argv)
 		map.cam.win_ptr = mlx_new_window(map.cam.mlx_ptr,
 				WIDTH, HEIGHT, "WORK IN PROGRESS");
 		read_file(&map, argv[1]);
+		/*while (map.pix[x])
+		{
+			y = 0;
+			while (y < map.hgt)
+			{
+				ft_printf("%d ", map.pix[x][y+1].z);
+				y++;
+			}
+			ft_printf("\n");
+			x++;
+		}*/
 		init_all(&map);
 		draw_map(&map);
 		mlx_key_hook(map.cam.win_ptr, key_events, &map);
@@ -45,10 +58,19 @@ int	close_cross(t_pbl *map)
 void	pxl_to_img(t_pbl *map, int x, int y, unsigned int color)
 {
 	char	*pixel;
+	int	i;
 
+	i = map->img.bpp - 8;
 	pixel = map->img.data_addr
 		+ (y * map->img.line_len + x * (map->img.bpp / 8));
-	*(int *)pixel = color;
+	while (i >= 0)
+	{
+		if (map->img.endian != 0)
+			*pixel++ = (color >> i) & 0xFF;
+		else
+			*pixel++ = (color >> (map->img.bpp - 8 - i)) & 0xFF;
+		i -= 8;
+	}
 }
 
 void	init_all(t_pbl *map)
@@ -77,7 +99,7 @@ void	init_all(t_pbl *map)
 void	init_map(t_pbl *map)
 {
 	map->cam.angle_x = 45 *(M_PI / 180);
-	map->cam.angle_z = 35 * (M_PI / 180);
+	map->cam.angle_z = 45 * (M_PI / 180);
 	map->zoom = 0;
 	map->alt_z = 0;
 	map->decv = 0;

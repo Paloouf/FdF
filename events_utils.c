@@ -6,7 +6,7 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:14:39 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/18 15:22:50 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/19 13:28:04 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,9 @@ void	re_init(t_pbl *map)
 			{
 				map->pix[y][x].xp = x * (1000 + map->zoom) / (map->wth);
 				map->pix[y][x].yp = y * (1000 + map->zoom) / (map->hgt);
-				map->pix[y][x].zp = (map->pix[y][x].z * (1000 + map->zoom) / ((map->zmax - map->zmin)*3)) + map->alt_z;
+				map->pix[y][x].zp = (map->pix[y][x].z * ((50
+						+ (map->alt_z) + ((1000 + map->zoom)/ 2)))
+				/ (map->zmax - map->zmin));
 				x++;
 			}
 			y++;
