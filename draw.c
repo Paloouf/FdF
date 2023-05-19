@@ -6,7 +6,7 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 08:56:56 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/18 17:54:23 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/19 10:30:24 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,17 @@ unsigned int	color(t_point one, t_point two, int i, int total)
 {
 	unsigned int	code;
 	double	dz;
+	static int	flag = 0;
 
 	if (one.colorflag)
-		return (one.color);
-	if (two.colorflag)
-		return (two.color);
-		//return (parsing_color(one, two, i , total));
+		flag = 1;
+	if (flag == 1)
+	{
+		if (one.color)
+			return (one.color);
+		else
+			return (16777215);
+	}
 	if (one.z > two.z && two.z != 0)
 		dz = one.z / two.z;
 	if (two.z > one.z && one.z != 0)
@@ -105,6 +110,8 @@ t_point	projection(t_pbl *map, int x, int y)
 		+ map->pix[y][x].yp * (cos(map->cam.angle_x) * sin(map->cam.angle_z))
 		+ map->pix[y][x].zp * cos(map->cam.angle_z);
 	pt.z = map->pix[y][x].z;
+	if (map->pix[y][x].colorflag)
+		pt.color = map->pix[y][x].color;
 	pt.colorflag = map->pix[y][x].colorflag;
 	return (pt);
 }

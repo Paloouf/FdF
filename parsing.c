@@ -6,12 +6,12 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 13:41:14 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/18 18:01:43 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/19 10:49:08 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-/*
+
 int	get_color(char *color)
 {
 	int	colors;
@@ -19,17 +19,19 @@ int	get_color(char *color)
 
 	colors = 0;
 	i = 2;
-	while (i < 8)
+	while (color[i])
 	{
 		if (color[i] >= '0' && color[i] <= '9')
 			colors += (ft_power(color[i] - 48, i - 1));
-		else
-			colors += (ft_power(color[i] - 49, i - 1));
+		else if (color[i] >= 'A' && color[i] <= 'F')
+			colors += (ft_power(color[i] - 55, i - 1));
+		else if (color[i] >= 'a' && color[i] <= 'f')
+			color += ft_power(color[i] -  87, i - 1);
 		i++;
 	}
 	return (colors);
 }
-
+/*
 int	parsing_color(t_point one, t_point two, int i, int total)
 {
 	int	color_one;
@@ -47,26 +49,37 @@ int	parsing_color(t_point one, t_point two, int i, int total)
 	(void)total;
 	return (color_one);
 }
-*/
+
 int	hex_to_int(char *str)
 {
 	int	i;
 	int	res;
+	int	base;
 
-	i = 2;
-	while(str[i])
+	i = ft_strlen(str);
+	base = 1;
+	while(i > 1)
 	{
 		if (str[i] >= '0' && str[i] <= '9')
-			res += ft_power(str[i] - 48, 8 -i);
+		{
+			res += (str[i] - 48) * base;
+			base *= 16;
+		}
 		else if (str[i] >= 'A' && str[i] <= 'F')
-			res += ft_power(str[i] - 49,  8 -i);
+		{
+			res += (str[i] - 55) * base;
+			base *= 16;
+		}
 		else if (str[i] >= 'a' && str[i] <= 'f')
-			res += ft_power(str[i] - 81,  8 -i);
-		i++;
+		{
+			res += (str[i] - 87) * base;
+			base *= 16;
+		}
+		i--;
 	}
-	return (res);
+	return (res-1);
 }
-
+*/
 void	ft_intsplit(t_pbl *map, char *line)
 {
 	static int	x = 0;
@@ -87,9 +100,12 @@ void	ft_intsplit(t_pbl *map, char *line)
 		map->pix[x][y].z = ft_atoi(point[0]);
 		if (point[1])
 		{
-			map->pix[x][y].color = hex_to_int(point[1]);
-			map->pix[x][y].colorflag = 1;
+			map->pix[x][y].color = get_color(point[1]);
+			ft_printf("%d\n", map->pix[x][y].color);
+			map->pix[0][0].colorflag = 1;
 		}
+		else
+			map->pix[x][y].colorflag = 0;
 		if (map->pix[x][y].z > map->zmax)
 			map->zmax = map->pix[x][y].z;
 		if (map->pix[x][y].z < map->zmin)
