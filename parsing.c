@@ -6,7 +6,7 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 13:41:14 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/19 15:31:59 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/22 10:33:16 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ int	get_color(char *color)
 	while (color[i])
 	{
 		if (color[i] >= '0' && color[i] <= '9')
-			colors += (color[i] - 48) * (ft_power(16, ft_strlen(color) - i));
+			colors += (color[i] - 48) * (ft_power(16, ft_strlen(color) - i - 1));
 		else if (color[i] >= 'A' && color[i] <= 'F')
-			colors += (color[i] - 55) * (ft_power(16, ft_strlen(color) - i));
+			colors += (color[i] - 55) * (ft_power(16, ft_strlen(color) - i - 1));
 		else if (color[i] >= 'a' && color[i] <= 'f')
-			colors += (color[i] - 87) * (ft_power(16, ft_strlen(color) - i));
+			colors += (color[i] - 87) * (ft_power(16, ft_strlen(color) - i - 1));
 		i++;
 	}
 	return (colors);
@@ -114,7 +114,9 @@ void	ft_intsplit(t_pbl *map, char *line)
 		if (map->pix[x][y].z < map->zmin)
 			map->zmin = map->pix[x][y].z;
 		free(tmp[y]);
-		//free(point);
+		free(point[0]);
+		free(point[1]);
+		free(point);
 		y++;
 	}
 	free(tmp);
