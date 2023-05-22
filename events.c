@@ -6,7 +6,7 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 15:11:01 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/18 15:13:55 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/22 11:09:27 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,5 +76,21 @@ int	translate(int key, t_pbl *map)
 		map->dech += 20;
 	if (key == XK_x)
 		reset(map);
+	if (key == XK_v)
+		set_dim(map);
+	if (key == XK_b)
+		set_tri(map);
 	return (1);
+}
+
+void	set_dim(t_pbl *map)
+{
+	map->cam.angle_x = 0.7853982;
+	map->cam.angle_z = 0.4636467;
+}
+
+void	set_tri(t_pbl *map)
+{
+	map->cam.angle_x = 1.047198;
+	map->cam.angle_z = 0.4642576;
 }

@@ -6,7 +6,7 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 12:00:59 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/18 17:03:15 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/22 11:28:38 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,17 @@
 # define ZOOM_MINUS 65453
 # define ZOOM_UP 65451
 
+# define TEXT_COLOR 0xEAEAEA
+
 typedef struct s_point
 {
-	int	xp;
-	int	yp;
-	int	zp;
-	int	z;
-	int	color;
+	int		xp;
+	int		yp;
+	int		zp;
+	int		z;
+	int		color;
 	char	*colorhex;
-	int	colorflag;
+	int		colorflag;
 }	t_point;
 
 typedef struct s_cam
@@ -98,7 +100,13 @@ void			pxl_four(t_pbl *map, t_point one, t_point two, int dx);
 unsigned int	color(t_point one, t_point two, int i, int total);
 void			init_map(t_pbl *map);
 int				translate(int key, t_pbl *map);
-int	parsing_color(t_point one, t_point two, int i, int total);
-int	get_color(char *color);
+int				parsing_color(t_point one, t_point two, int i, int total);
+int				get_color(char *color);
+void			draw_controls(t_pbl *map);
+void			print_str(t_pbl *map, int x, int y, char *str);
+void			set_dim(t_pbl *map);
+void			set_tri(t_pbl *map);
+void			intsplit_parse(t_pbl *map, char **point, int x, int y);
+int				color_parse(t_point one, t_point two);
 
 #endif

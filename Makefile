@@ -6,7 +6,7 @@
 #    By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/16 14:22:58 by ltressen          #+#    #+#              #
-#    Updated: 2023/05/18 14:14:59 by ltressen         ###   ########.fr        #
+#    Updated: 2023/05/22 10:47:22 by ltressen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,8 @@ SRC = main.c \
 	draw.c \
 	events.c \
 	draw_utils.c \
-	events_utils.c
+	events_utils.c \
+	menu.c
 	
 OBJ = ${SRC:.c=.o} 
 	

@@ -6,7 +6,7 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 09:19:20 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/19 15:38:09 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/22 11:13:49 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 int	main(int argc, char **argv)
 {
 	t_pbl	map;
-	//int x= 0;
-	//int y = 0;
 
 	map.zmax = 0;
 	map.zmin = 0;
@@ -26,17 +24,6 @@ int	main(int argc, char **argv)
 		map.cam.win_ptr = mlx_new_window(map.cam.mlx_ptr,
 				WIDTH, HEIGHT, "WORK IN PROGRESS");
 		read_file(&map, argv[1]);
-		/*while (map.pix[x])
-		{
-			y = 0;
-			while (y < map.hgt)
-			{
-				ft_printf("%d ", map.pix[x][y+1].z);
-				y++;
-			}
-			ft_printf("\n");
-			x++;
-		}*/
 		init_all(&map);
 		draw_map(&map);
 		mlx_key_hook(map.cam.win_ptr, key_events, &map);
@@ -58,7 +45,7 @@ int	close_cross(t_pbl *map)
 void	pxl_to_img(t_pbl *map, int x, int y, unsigned int color)
 {
 	char	*pixel;
-	int	i;
+	int		i;
 
 	i = map->img.bpp - 8;
 	pixel = map->img.data_addr
@@ -88,8 +75,8 @@ void	init_all(t_pbl *map)
 			map->pix[y][x].xp = x * (1000 + map->zoom) / (map->wth);
 			map->pix[y][x].yp = y * (1000 + map->zoom) / (map->hgt);
 			map->pix[y][x].zp = (map->pix[y][x].z * ((50
-						+ (map->alt_z) + ((1000 + map->zoom)/ 2)))
-				/ (map->zmax - map->zmin));
+							+ (map->alt_z) + ((1000 + map->zoom) / 2)))
+					/ (map->zmax - map->zmin));
 			x++;
 		}
 		y++;

@@ -6,11 +6,21 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 13:41:14 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/22 10:33:16 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/22 11:24:28 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+
+int	color_parse(t_point one, t_point two)
+{
+	if (one.z > two.z)
+		return (one.color);
+	if (two.color > one.z)
+		return (two.color);
+	else
+		return (16777215);
+}
 
 int	get_color(char *color)
 {
@@ -22,64 +32,19 @@ int	get_color(char *color)
 	while (color[i])
 	{
 		if (color[i] >= '0' && color[i] <= '9')
-			colors += (color[i] - 48) * (ft_power(16, ft_strlen(color) - i - 1));
+			colors += (color[i] - 48)
+				* (ft_power(16, ft_strlen(color) - i - 1));
 		else if (color[i] >= 'A' && color[i] <= 'F')
-			colors += (color[i] - 55) * (ft_power(16, ft_strlen(color) - i - 1));
+			colors += (color[i] - 55)
+				* (ft_power(16, ft_strlen(color) - i - 1));
 		else if (color[i] >= 'a' && color[i] <= 'f')
-			colors += (color[i] - 87) * (ft_power(16, ft_strlen(color) - i - 1));
+			colors += (color[i] - 87)
+				* (ft_power(16, ft_strlen(color) - i - 1));
 		i++;
 	}
 	return (colors);
 }
-/*
-int	parsing_color(t_point one, t_point two, int i, int total)
-{
-	int	color_one;
-	//int	color_two;
 
-	color_one = 16777215;
-	//color_two = 16777215;
-	if (!one.colorflag && !two.colorflag)
-		return (16777215);
-	if (two.colorflag)
-		color_one = get_color(two.colorhex);
-	if (one.colorflag)
-		color_one = get_color(one.colorhex);
-	(void)i;
-	(void)total;
-	return (color_one);
-}
-
-int	hex_to_int(char *str)
-{
-	int	i;
-	int	res;
-	int	base;
-
-	i = ft_strlen(str);
-	base = 1;
-	while(i > 1)
-	{
-		if (str[i] >= '0' && str[i] <= '9')
-		{
-			res += (str[i] - 48) * base;
-			base *= 16;
-		}
-		else if (str[i] >= 'A' && str[i] <= 'F')
-		{
-			res += (str[i] - 55) * base;
-			base *= 16;
-		}
-		else if (str[i] >= 'a' && str[i] <= 'f')
-		{
-			res += (str[i] - 87) * base;
-			base *= 16;
-		}
-		i--;
-	}
-	return (res-1);
-}
-*/
 void	ft_intsplit(t_pbl *map, char *line)
 {
 	static int	x = 0;
@@ -89,38 +54,39 @@ void	ft_intsplit(t_pbl *map, char *line)
 
 	y = 0;
 	tmp = ft_split(line, ' ');
-	//ft_printf("%s \n", line);
 	while (tmp[y] && tmp[y][0] != '\n')
 		y++;
 	map->wth = y;
-	//ft_printf("%d\n", map->wth);
 	map->pix[x] = ft_calloc(y, sizeof(t_point));
-	//malloc(sizeof(t_point)*y);
 	y = 0;
 	while (tmp[y])
 	{
-		point = ft_split(tmp[y], 'x'); 
-		map->pix[x][y].z = ft_atoi(point[0]);
-		if (point[1])
-		{
-			map->pix[x][y].color = get_color(point[1]);
-			//ft_printf("%d\n", map->pix[x][y].color);
-			map->pix[0][0].colorflag = 1;
-		}
-		else
-			map->pix[x][y].colorflag = 0;
-		if (map->pix[x][y].z > map->zmax)
-			map->zmax = map->pix[x][y].z;
-		if (map->pix[x][y].z < map->zmin)
-			map->zmin = map->pix[x][y].z;
+		point = ft_split(tmp[y], 'x');
+		intsplit_parse(map, point, x, y);
 		free(tmp[y]);
-		free(point[0]);
-		free(point[1]);
-		free(point);
 		y++;
 	}
 	free(tmp);
 	x++;
+}
+
+void	intsplit_parse(t_pbl *map, char **point, int x, int y)
+{
+	map->pix[x][y].z = ft_atoi(point[0]);
+	if (point[1])
+	{
+		map->pix[x][y].color = get_color(point[1]);
+		map->pix[0][0].colorflag = 1;
+	}
+	else
+		map->pix[x][y].colorflag = 0;
+	if (map->pix[x][y].z > map->zmax)
+		map->zmax = map->pix[x][y].z;
+	if (map->pix[x][y].z < map->zmin)
+		map->zmin = map->pix[x][y].z;
+	free(point[0]);
+	free(point[1]);
+	free(point);
 }
 
 void	read_file(t_pbl *map, char *name)
@@ -143,12 +109,11 @@ void	read_file(t_pbl *map, char *name)
 	map->pix = malloc(sizeof(t_point *) * i - 1);
 	file = open(name, O_RDONLY);
 	line = get_next_line(file);
-	while (i > 1)
+	while (i-- > 1)
 	{
 		ft_intsplit(map, line);
 		free(line);
 		line = get_next_line(file);
-		i--;
 	}
 	return ;
 }

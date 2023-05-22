@@ -6,7 +6,7 @@
 /*   By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 08:56:56 by ltressen          #+#    #+#             */
-/*   Updated: 2023/05/19 14:21:01 by ltressen         ###   ########.fr       */
+/*   Updated: 2023/05/22 11:27:14 by ltressen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	draw_map(t_pbl *map)
 	last_lines(map, y, x);
 	mlx_put_image_to_window(map->cam.mlx_ptr, map->cam.win_ptr,
 		map->img.image, 0, 0);
+	draw_controls(map);
 }
 
 void	aller_les_bleus(t_pbl *map)
@@ -65,19 +66,13 @@ void	aller_les_bleus(t_pbl *map)
 unsigned int	color(t_point one, t_point two, int i, int total)
 {
 	unsigned int	code;
-	double	dz;
-	static int	flag = 0;
+	double			dz;
+	static int		flag = 0;
 
 	if (one.colorflag == 1)
 		flag = 1;
 	if (flag == 1)
-	{
-		//ft_printf("%d\n", one.color);
-		if (!one.color)
-			return (16777215);
-		else
-			return (one.color);
-	}
+		return (color_parse(one, two));
 	if (one.z > two.z && two.z != 0)
 		dz = one.z / two.z;
 	if (two.z > one.z && one.z != 0)
@@ -91,15 +86,17 @@ unsigned int	color(t_point one, t_point two, int i, int total)
 	else
 	{
 		if (total != 0)
-			code = 16777215 - ((2500 * one.z) + (((2500 / abs(total)) * (abs(i) * dz))));
+			code = 16777215 - ((2500 * one.z)
+					+ (((2500 / abs(total)) * (abs(i) * dz))));
 	}
 	return (code);
 }
 
 t_point	projection(t_pbl *map, int x, int y)
 {
-	t_point	pt;
+	t_point		pt;
 	static int	flag = 0;
+
 	pt.xp = (map->pix[y][x].xp) * cos(map->cam.angle_x)
 		+ map->pix[y][x].yp * (-sin(map->cam.angle_x)) + map->pix[y][x].zp * 0;
 	pt.yp = (map->pix[y][x].xp) * (sin(map->cam.angle_x)
