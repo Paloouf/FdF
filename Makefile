@@ -1,48 +1,80 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: ltressen <ltressen@student.42perpignan.    +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/03/16 14:22:58 by ltressen          #+#    #+#              #
-#    Updated: 2023/05/22 10:47:22 by ltressen         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+INC= minilibx-linux/libmlx.a libft/libft.a
 
+NAME = FdF
+SRC = ${wildcard src/*.c}
+OBJ = $(SRC:.c=.o)
+CC = cc
+
+LFLAGS = -lX11 -lXext -lm
 FLAGS = -Wall -Werror -Wextra
 
-LIBS = -lX11 -lXext -lm
-INCLUDE = minilibx-linux/libmlx.a
-NAME = fdf.a
+# ------------------------------ Colors ------------------------------
 
-EXEC= fdf
-SRC = main.c \
-	parsing.c \
-	draw.c \
-	events.c \
-	draw_utils.c \
-	events_utils.c \
-	menu.c
-	
-OBJ = ${SRC:.c=.o} 
-	
-all: $(NAME)
+BOLD_PURPLE     =       \033[1;35m
 
-$(NAME): ${OBJ}
+BOLD_CYAN       =       \033[1;36m
+
+BOLD_YELLOW     =       \033[1;33m
+
+NO_COLOR        =       \033[0m
+
+# ------------------------------ Messages ------------------------------
+
+HEADER_NAME		=		$(HEADER_TOP) $(HEADER_TOP_MID) $(HEADER_MID)$(HEADER_BOT)
+
+HEADER_COMP     =       echo "\n🌐 $(BOLD_YELLOW)FdF $(NO_COLOR)by jcasades & ltressen\n\n"
+
+COMP_START      =       printf "\n🚧 $(BOLD_YELLOW)Make: $(NO_COLOR)Debut de compilation...\r"
+
+EXE_READY       =       echo "\n\n📟 Compilation de $(BOLD_YELLOW)FdF$(NO_COLOR) reussie !\n"
+
+CLEANED         =       echo "\n💧 $(BOLD_YELLOW)Clean: $(NO_COLOR)Suppression des fichiers .o et de l'executable \n"
+
+FCLEANED        =       echo "\n🧼 $(BOLD_YELLOW)Fclean: $(NO_COLOR)Suppression des fichiers .o et de l'executable \n"
+
+NORM			= 		echo "\n📢 $(BOLD_CYAN)NORMINETTE: $(BOLD_YELLOW)Verification de la norme de tous les fichiers en .c !\n$(BOLD_PURPLE)"
+
+NORM_H			=		echo "\n📣 $(BOLD_CYAN)NORMINETTE: $(BOLD_YELLOW)Verification de la norme du .h\n$(BOLD_PURPLE)"
+
+# ------------------------------ Rules ------------------------------
+MAKEFLAGS += --silent
+
+$(NAME): comp_start $(OBJ)
 	make -C libft/
-	mv libft/libft.a ${NAME}
-	gcc -c ${FLAGS} ${SRC} ${LIBS}
-	ar rc ${NAME} ${OBJ}
-	gcc ${FLAGS} -g ${SRC} ${NAME} ${INCLUDE} ${LIBS} -o ${EXEC}
-	
+	make -C minilibx-linux/
+	rm -f libft/*.o
+	@$(CC) $(FLAGS) $(OBJ) $(INC) $(LFLAGS) -o $(NAME)
+	echo "\n"
+	@$(EXE_READY)
+
+all: $(NAME) norminette
+
+norminette:
+	$(NORM)
+	norminette *.c
+	$(NORM_H)
+	norminette -R checkDefine cub3d.h
+	echo "\n"
+
+comp_start:
+	@$(HEADER_COMP)
+	@$(COMP_START)
+
 clean:
 	make clean -C libft/
-	rm -f ${OBJ}
+	make clean -C minilibx-linux/
+	$(CLEANED)
+	rm -f $(NAME) $(OBJ) *~ core *.core
 
-fclean:
-	make clean -C libft/
-	rm -f ${OBJ}
-	rm -f ${NAME} ${EXEC}
+fclean: clean
+	make fclean -C libft/
+	rm -f $(NAME) $(OBJ) *~ core *.core
+	$(FCLEANED)
 
-re: fclean all
+re: clean all
+
+bonus: re
+
+%.o: %.c
+	@printf "🚧 $(BOLD_YELLOW)Make: $(NO_COLOR)Compilation des fichiers : %-33.33s\r$(NO_COLOR)" $@
+	@${CC} ${FLAGS} -c $< -o $@
